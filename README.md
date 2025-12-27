@@ -30,7 +30,6 @@ This project is designed for analyzing and recognizing cloned (deepfake) and rea
 - **data/real/**: Contains real audio samples, organized by speaker. Each speaker folder may include a `meta.json` file with metadata.
 - **data/cloned/**: Contains cloned (deepfake) audio samples, organized similarly by speaker.
 - **data/manifests/**: Intended for manifest or metadata files describing datasets.
-- **my/cloning/**: User-specific experiments, with subfolders for each user and their cloned/original samples.
 
 ## Dependencies
 
