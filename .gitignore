@@ -1,5 +1,6 @@
-my/ #do not delete this line
-clone.ipynb # do not delete this line
+#do not delete the following lines
+my/
+clone.ipynb 
 
-
+# data
 data/
