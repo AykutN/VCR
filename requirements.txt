@@ -39,3 +39,13 @@ pyyaml==6.0.1
 requests==2.31.0
 typing_extensions==4.9.0
 ffmpeg-python==0.2.0
+
+# ===============================
+# Machine Learning & Analysis
+# ===============================
+scikit-learn>=1.0.0
+
+# ===============================
+# Audio Recording
+# ===============================
+sounddevice>=0.4.6
