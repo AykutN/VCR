@@ -12,14 +12,44 @@ SENTENCES_TR = [
     "Bugün hava çok güzel.",
     "Yapay zeka insan hayatını kolaylaştırıyor.",
     "Lütfen bu cümleyi net bir şekilde okuyun.",
-    "Ses kaydı tamamlandı."
+    "Ses kaydı tamamlandı.",
+    "Teknoloji her geçen gün gelişiyor ve değişiyor.",
+    "Bilgisayar bilimleri modern dünyanın temel taşlarından biridir.",
+    "Doğal dil işleme yapay zekanın önemli bir dalıdır.",
+    "Ses tanıma sistemleri günlük hayatımızda yaygın olarak kullanılıyor.",
+    "Makine öğrenmesi algoritmaları büyük veri setlerinden öğrenir.",
+    "Derin öğrenme sinir ağları ile gerçekleştirilen bir yöntemdir.",
+    "Sesli asistanlar evlerimizde ve ofislerimizde yardımcı oluyor.",
+    "Dijital dönüşüm tüm sektörleri etkiliyor ve değiştiriyor.",
+    "Yapay zeka uygulamaları sağlık sektöründe devrim yaratıyor.",
+    "Ses kalitesi iletişimde çok önemli bir faktördür.",
+    "Bilimsel araştırmalar insanlığın ilerlemesine katkı sağlıyor.",
+    "Teknolojik yenilikler yaşam kalitemizi artırıyor.",
+    "Ses işleme teknikleri müzik ve film endüstrisinde kullanılıyor.",
+    "Yapay zeka ve robotik geleceğin mesleklerini şekillendiriyor.",
+    "Dijital çağda bilgiye erişim çok daha kolay hale geldi."
 ]
 SENTENCES_AR = [
     "مرحبًا، هذه جملة اختبار.",
     "الطقس جميل جدًا اليوم.",
     "الذكاء الاصطناعي يسهل حياة الإنسان.",
     "يرجى قراءة هذه الجملة بوضوح.",
-    "تم الانتهاء من تسجيل الصوت."
+    "تم الانتهاء من تسجيل الصوت.",
+    "التكنولوجيا تتطور وتتغير كل يوم.",
+    "علوم الحاسوب هي إحدى الركائز الأساسية للعالم الحديث.",
+    "معالجة اللغة الطبيعية هي فرع مهم من الذكاء الاصطناعي.",
+    "أنظمة التعرف على الصوت تُستخدم على نطاق واسع في حياتنا اليومية.",
+    "خوارزميات التعلم الآلي تتعلم من مجموعات البيانات الكبيرة.",
+    "التعلم العميق هو طريقة تُنفذ باستخدام الشبكات العصبية.",
+    "المساعدات الصوتية تساعد في منازلنا ومكاتبنا.",
+    "التحول الرقمي يؤثر ويغير جميع القطاعات.",
+    "تطبيقات الذكاء الاصطناعي تحدث ثورة في قطاع الصحة.",
+    "جودة الصوت عامل مهم جدًا في التواصل.",
+    "البحوث العلمية تساهم في تقدم البشرية.",
+    "الابتكارات التكنولوجية تحسن نوعية حياتنا.",
+    "تقنيات معالجة الصوت تُستخدم في صناعة الموسيقى والأفلام.",
+    "الذكاء الاصطناعي والروبوتات تشكل مهن المستقبل.",
+    "في العصر الرقمي، أصبح الوصول إلى المعلومات أسهل بكثير."
 ]
 SAMPLE_RATE = 22050
 CHANNELS = 1
