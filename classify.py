@@ -1,5 +1,5 @@
 
-file = input("Filename: "),
+file = input("Filename: ")
 
 def features(file):
     pass

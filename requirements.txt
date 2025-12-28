@@ -27,6 +27,7 @@ TTS==0.22.0
 # Audio (compatible with numpy 1.22)
 # ===============================
 librosa>=0.10.0
+matplotlib>=3.7.0
 soundfile==0.12.1
 pydub==0.25.1
 
