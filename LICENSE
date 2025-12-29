@@ -1,6 +1,6 @@
 Creative Commons Attribution 4.0 International (CC BY 4.0)
 
-Copyright (c) 2025 Deep_Fake_Recognition contributors
+Copyright (c) 2025 VCR contributors
 
 This project is licensed under the Creative Commons Attribution 4.0 International License.
 
@@ -12,11 +12,10 @@ Attribution — You must give appropriate credit, provide a link to the license,
 and indicate if changes were made. Proper citation is required when using,
 redistributing, or building upon this project. A suggested attribution format:
 
-  Deep_Fake_Recognition (2025). GitHub repository: <replace-with-repo-URL>.
+    VCR (2025). GitHub repository: https://github.com/ibeuler/VCR.
 
-Replace `<replace-with-repo-URL>` with the repository URL or a permalink to the
-release you used. If you know the original author(s), include their names in
-the citation as well.
+Replace the repository URL above with a permalink to the release you used if needed.
+If you know the original author(s), include their names in the citation as well.
 
 Full license text:
 https://creativecommons.org/licenses/by/4.0/legalcode
