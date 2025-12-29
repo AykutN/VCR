@@ -1,13 +1,20 @@
+#do not delete the following lines
+my/
+clone.ipynb 
+# venv
+.venv*/
+
+# Python cache
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
 .Python
+
+# Data files (audio samples - too large for git)
 data/
 *.wav
 *.zip
+
+# OS files
 .DS_Store
-my/
-clone.ipynb 
-# venv
-.venv*/

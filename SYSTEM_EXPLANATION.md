@@ -251,6 +251,8 @@ print(f"Is Fake: {result['is_fake']}")
 print(f"Score: {result['score']:.4f}")
 ```
 
+Ya da classify.py çalıştırılabilir
+
 ### 2. Tüm Dosyaları Test Etmek
 ```bash
 python batch_test.py --threshold 0.34
