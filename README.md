@@ -6,7 +6,7 @@ This project is designed for analyzing and recognizing cloned (deepfake) and rea
 ## License and Citation
 This project is licensed under the Creative Commons Attribution 4.0 International License (CC BY 4.0). Please cite this repository when using or redistributing the code, models, or datasets. A suggested citation format:
 
-   Deep_Fake_Recognition (2025). GitHub repository: <replace-with-repo-URL>.
+   Deep_Fake_Recognition (2025). GitHub repository: https://github.com/ibeuler/VCR.
 
 Replace `<replace-with-repo-URL>` with the repository or release URL you used. See the `LICENSE` file for full license text and attribution requirements.
 
