@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deepfake Voice Detection</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎤 Deepfake Voice Detection</h1>
+            <p class="subtitle">Detect cloned and synthetic voices using rule-based and ML methods</p>
+        </header>
+
+        <main>
+            <div class="upload-section">
+                <form id="uploadForm" enctype="multipart/form-data">
+                    <div class="file-upload-area" id="uploadArea">
+                        <input type="file" id="audioFile" name="file" accept=".wav,.mp3,.flac,.ogg,.m4a" required>
+                        <label for="audioFile" class="upload-label">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="17 8 12 3 7 8"></polyline>
+                                <line x1="12" y1="3" x2="12" y2="15"></line>
+                            </svg>
+                            <span id="fileLabel">Click to upload or drag and drop</span>
+                            <span class="file-hint">WAV, MP3, FLAC, OGG, M4A (max 16MB)</span>
+                        </label>
+                    </div>
+
+                    <div class="method-selection">
+                        <label>Detection Method:</label>
+                        <div class="radio-group">
+                            <label class="radio-label">
+                                <input type="radio" name="method" value="hybrid" checked>
+                                <span>Hybrid (Rule + ML)</span>
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="method" value="rule">
+                                <span>Rule-Based</span>
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="method" value="ml">
+                                <span>ML-Based</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-detect" id="detectBtn">
+                        <span class="btn-text">Detect Deepfake</span>
+                        <span class="btn-loader" id="loader" style="display: none;">⏳ Processing...</span>
+                    </button>
+                </form>
+            </div>
+
+            <div class="result-section" id="resultSection" style="display: none;">
+                <h2>Detection Result</h2>
+                <div class="result-card" id="resultCard">
+                    <div class="result-header">
+                        <span class="result-icon" id="resultIcon">🎯</span>
+                        <span class="result-text" id="resultText">Processing...</span>
+                    </div>
+                    <div class="result-details" id="resultDetails"></div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>Voice Cloning Recognition System | Rule-Based + ML Detection</p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
+

@@ -7,21 +7,31 @@ This project is designed for analyzing and recognizing cloned (deepfake) and rea
 
 ```
 ├── analysis.ipynb           # Jupyter notebook for waveform analysis and visualization
-├── clone_real_data.py       # Script to prepare/clone real data for experiments
-├── convert_audio.ipynb      # Notebook for audio format conversion
-├── record_sentences.py      # Script to record sentences for dataset
-├── requirements.txt         # Python dependencies
+├── app.py                  # Flask web application for deepfake detection
+├── batch_test.py           # Batch testing script for rule-based detection
+├── train_ml_models.py      # ML model training script (Logistic Regression & SVM)
+├── ml_detector.py          # ML-based detection module
+├── hybrid_detector.py      # Hybrid detection (rule-based + ML)
+├── clone_real_data.py      # Script to prepare/clone real data for experiments
+├── record_sentences.py     # Script to record sentences for dataset
+├── analyze_scores.py        # Score distribution analysis
+├── optimize_simple.py       # Parameter optimization script
+├── requirements.txt        # Python dependencies
+├── templates/               # HTML templates for web interface
+│   └── index.html
+├── static/                  # Static files (CSS, JS)
+│   ├── css/
+│   └── js/
+├── models/                  # Trained ML models (created after training)
+│   ├── logistic_regression.pkl
+│   ├── svm.pkl
+│   └── scaler.pkl
 ├── data/                    # Main data directory
-│   ├── README.md            # Data directory documentation
 │   ├── cloned/              # Cloned (deepfake) audio samples
-│   │   ├── sample1_ar/      # Cloned samples for speaker 'sample1_ar'
-│   │   └── sample1_tr/      # Cloned samples for speaker 'sample1_tr'
-│   ├── manifests/           # Metadata or manifest files
+│   │   └── [speaker_name]/  # Cloned samples organized by speaker
 │   └── real/                # Real audio samples
-│       ├── sample1_ar/      # Real samples for speaker 'sample1_ar'
-│       │   └── meta.json    # Metadata for 'sample1_ar'
-│       └── sample1_tr/      # Real samples for speaker 'sample1_tr'
-│           └── meta.json    # Metadata for 'sample1_tr'
+│       └── [speaker_name]/  # Real samples organized by speaker
+│           └── meta.json    # Metadata for speaker
 
 ```
 
@@ -38,6 +48,8 @@ All dependencies are listed in `requirements.txt`. Key packages include:
 - `librosa`: Audio processing and feature extraction
 - `matplotlib`: Plotting and visualization
 - `numpy`: Numerical operations
+- `scikit-learn`: Machine learning models (Logistic Regression, SVM)
+- `flask`: Web framework for the interface
 - `jupyter`: For running notebooks
 
 To install all dependencies, first create and activate a virtual environment:
@@ -60,9 +72,73 @@ pip install -r requirements.txt
 
 ## Usage
 
+### 1. Data Preparation
+
 1. Prepare your data in the `data/real` and `data/cloned` directories, following the structure above.
-2. Use the provided notebooks and scripts for analysis, conversion, and recording.
-3. Run `analysis.ipynb` to visualize and compare real vs. cloned audio waveforms.
+2. Use `record_sentences.py` to record real voice samples.
+3. Use `clone_real_data.py` to generate cloned versions of the recordings.
+
+### 2. ML Model Training
+
+**Important:** Before using ML-based detection, you need to train the models using your dataset.
+
+```bash
+python train_ml_models.py --real-dir data/real --cloned-dir data/cloned --output models/
+```
+
+This script will:
+- Extract features from all real and cloned audio files
+- Train Logistic Regression and SVM classifiers
+- Save trained models to the `models/` directory
+- Display training results and accuracy metrics
+
+**Parameters:**
+- `--real-dir`: Directory containing real audio samples (default: `data/real`)
+- `--cloned-dir`: Directory containing cloned audio samples (default: `data/cloned`)
+- `--output`: Output directory for saved models (default: `models`)
+- `--test-size`: Proportion of test set (default: 0.2)
+
+**Note:** Make sure you have both real and cloned audio files in the specified directories before training.
+
+### 3. Detection Methods
+
+The system supports three detection methods:
+
+1. **Rule-Based Detection** (no training required):
+   ```bash
+   python batch_test.py --threshold 0.34
+   ```
+
+2. **ML-Based Detection** (requires trained models):
+   ```python
+   from ml_detector import detect_with_ml
+   result = detect_with_ml('path/to/audio.wav', models_dir='models')
+   ```
+
+3. **Hybrid Detection** (combines rule-based + ML):
+   ```python
+   from hybrid_detector import detect_hybrid
+   result = detect_hybrid('path/to/audio.wav', real_dir='data/real', models_dir='models')
+   ```
+
+### 4. Web Interface
+
+Start the web application:
+
+```bash
+python app.py
+```
+
+Then open your browser and navigate to `http://localhost:5000`
+
+The web interface allows you to:
+- Upload audio files (WAV, MP3, FLAC, OGG, M4A)
+- Choose detection method (Hybrid, Rule-Based, or ML-Based)
+- View detailed detection results with scores and confidence
+
+### 5. Analysis and Visualization
+
+Run `analysis.ipynb` to visualize and compare real vs. cloned audio waveforms.
 
 ## Notes
 
