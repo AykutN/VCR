@@ -9,8 +9,14 @@
 <body>
     <div class="container">
         <header>
-            <h1>🎤 Deepfake Voice Detection</h1>
+            <h1>🎤 Cloned Voice Recognition</h1>
             <p class="subtitle">Detect cloned and synthetic voices using rule-based and ML methods</p>
+            <p class="subtitle"> Prepared by: Arda Usta, Yusuf Aykut, Ibrahim H.I. Abushawish</p>
+            <div class="source-link" style="margin-top:10px;">
+                <a href="https://github.com/ibeuler/VCR" target="_blank" rel="noopener noreferrer" class="source-btn" style="color:#fff;">
+                    View source on GitHub
+                </a>
+            </div>
         </header>
 
         <main>
@@ -67,8 +73,23 @@
         </main>
 
         <footer>
-            <p>Voice Cloning Recognition System | Rule-Based + ML Detection</p>
+            <div class="footer-inner" style="text-align:center;padding:16px 0;color:#666;font-size:14px;">
+            <p style="margin:4px 0;">Voice Cloning Recognition System — Rule-Based + ML Detection</p>
+            <p style="margin:4px 0;">
+                Prepared by: Arda Usta, Yusuf Aykut, Ibrahim H.I. Abushawish —
+                <a href="https://github.com/ibeuler/VCR" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline;">Source on GitHub</a>
+            </p>
+            <p style="margin:4px 0;font-size:12px;color:#999;">
+                Version 1.0 • <span id="buildDate"></span>
+            </p>
+            </div>
         </footer>
+        <script>
+            (function(){
+            var d = new Date();
+            document.getElementById('buildDate').textContent = d.toLocaleDateString();
+            })();
+        </script>
     </div>
 
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>

@@ -17,7 +17,7 @@ import argparse
 from sklearn.linear_model import LogisticRegression
 from sklearn.svm import SVC
 from sklearn.preprocessing import StandardScaler
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, GroupShuffleSplit
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
 import warnings
 warnings.filterwarnings('ignore')
@@ -130,7 +130,7 @@ def prepare_dataset(real_dir='data/real', cloned_dir='data/cloned'):
     
     return X, y, file_paths
 
-def train_models(X, y, test_size=0.2, random_state=42):
+def train_models(X, y, file_paths=None, test_size=0.2, random_state=42):
     """
     Train Logistic Regression and SVM models.
     
@@ -156,10 +156,19 @@ def train_models(X, y, test_size=0.2, random_state=42):
     print("TRAINING MODELS")
     print("="*70)
     
-    # Split data
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=test_size, random_state=random_state, stratify=y
-    )
+    # If file_paths provided, perform a group split by speaker to avoid leakage
+    if file_paths is not None:
+        # derive speaker group from file path parent directory
+        groups = [os.path.basename(os.path.dirname(p)) for p in file_paths]
+        gss = GroupShuffleSplit(n_splits=1, test_size=test_size, random_state=random_state)
+        train_idx, test_idx = next(gss.split(X, y, groups))
+        X_train, X_test = X[train_idx], X[test_idx]
+        y_train, y_test = y[train_idx], y[test_idx]
+    else:
+        # Fallback to random stratified split
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, y, test_size=test_size, random_state=random_state, stratify=y
+        )
     
     print(f"\nTrain set: {len(X_train)} samples")
     print(f"Test set: {len(X_test)} samples")
@@ -294,8 +303,8 @@ def main():
         print("\n❌ Error: No samples found! Check your data directories.")
         return
     
-    # Train models
-    models, results = train_models(X, y, test_size=args.test_size)
+    # Train models (pass file paths so we can group-split by speaker)
+    models, results = train_models(X, y, file_paths=file_paths, test_size=args.test_size)
     
     # Save models
     save_models(models, output_dir=args.output)

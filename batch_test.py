@@ -361,6 +361,22 @@ def load_reference_samples(real_dir, max_samples=None):
     print(f"Loaded {len(reference_features_list)} reference samples.")
     return reference_features_list
 
+
+def _to_native(obj):
+    """Recursively convert numpy types/arrays to native Python types for JSON serialization."""
+    if isinstance(obj, np.ndarray):
+        return obj.tolist()
+    if isinstance(obj, np.generic):
+        try:
+            return obj.item()
+        except Exception:
+            return obj
+    if isinstance(obj, dict):
+        return {k: _to_native(v) for k, v in obj.items()}
+    if isinstance(obj, (list, tuple)):
+        return [_to_native(v) for v in obj]
+    return obj
+
 def detect_deepfake(audio_path, reference_real_samples=None, real_dir=None, 
                    threshold=0.5, weights=None, distance_scale=10.0):
     """Detect if an audio file is a deepfake (cloned) or real."""
@@ -400,22 +416,25 @@ def detect_deepfake(audio_path, reference_real_samples=None, real_dir=None,
     )
     
     score = hybrid_result['hybrid_score']
-    is_fake = score >= threshold
-    
+    is_fake = bool(score >= threshold)
+
     confidence = abs(score - threshold) * 2
-    confidence = min(1.0, confidence)
-    
+    confidence = float(min(1.0, confidence))
+
+    # Sanitize nested results to native Python types for JSON serialization
+    feature_analysis = {
+        'distance_metrics': _to_native(distance_metrics),
+        'threshold_result': _to_native(threshold_result),
+        'statistical_result': _to_native(statistical_result),
+        'hybrid_components': _to_native(hybrid_result['components'])
+    }
+
     return {
         'is_fake': is_fake,
-        'score': score,
+        'score': float(score),
         'confidence': confidence,
-        'threshold': threshold,
-        'feature_analysis': {
-            'distance_metrics': distance_metrics,
-            'threshold_result': threshold_result,
-            'statistical_result': statistical_result,
-            'hybrid_components': hybrid_result['components']
-        }
+        'threshold': float(threshold),
+        'feature_analysis': feature_analysis
     }
 
 def batch_test_all_files(real_dir='data/real', cloned_dir='data/cloned', threshold=0.5,

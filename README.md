@@ -1,7 +1,28 @@
-# Cloned Voice Recognition
+# Voice Clone Recognition
 
 ## Project Overview
 This project is designed for analyzing and recognizing cloned (deepfake) and real voice samples. It provides tools for data preparation, audio processing, and waveform analysis to help distinguish between real and cloned audio.
+## License and Citation
+
+This project (Voice Clone Recognition) is licensed under the Creative Commons Attribution 4.0 International (CC BY 4.0). See the LICENSE file or https://creativecommons.org/licenses/by/4.0/ for full terms. You must provide proper attribution when using or redistributing code, models, or datasets from this repository.
+
+Replace the URL below with the exact repository or release URL/DOI you used, and retain the CC BY 4.0 attribution line in any redistributed content.
+
+Suggested plain citation (replace the URL with the repository or release URL/DOI you used):
+Voice Clone Recognition (2025). GitHub repository: https://github.com/ibeuler/VCR
+
+Suggested BibTeX entry:
+```bibtex
+@misc{Voice_Clone_Recognition2025,
+   title = {Voice\_Clone\_Recognition},
+   author = {Ibrahim H.I. Abushawish and Yusuf Aykut and Arda Usta},
+   year = {2025},
+   howpublished = {\url{https://github.com/ibeuler/VCR}},
+   note = {Prepared by: Arda Usta, Yusuf Aykut, Ibrahim H.I. Abushawish; CC BY 4.0}
+}
+```
+
+Replace the URL above with the exact repository or release URL/DOI you used, and retain the CC BY 4.0 attribution line in any redistributed content.
 
 ## Codebase Structure
 

@@ -6,7 +6,7 @@ Hybrid Deepfake Detection System
 Combines rule-based detection with ML-based detection for improved accuracy.
 """
 
-from batch_test import detect_deepfake
+from batch_test import detect_deepfake, _to_native
 from ml_detector import detect_with_ml
 
 def detect_hybrid(audio_path, real_dir='data/real', models_dir='models',
@@ -76,25 +76,21 @@ def detect_hybrid(audio_path, real_dir='data/real', models_dir='models',
     hybrid_score = max(0.0, min(1.0, hybrid_score))
     
     # Final decision (threshold = 0.5)
-    is_fake = hybrid_score >= 0.5
-    
+    is_fake = bool(hybrid_score >= 0.5)
+
     # Confidence
-    confidence = abs(hybrid_score - 0.5) * 2
-    confidence = min(1.0, confidence)
-    
+    confidence = float(min(1.0, abs(hybrid_score - 0.5) * 2))
+
     return {
         'is_fake': is_fake,
         'hybrid_score': float(hybrid_score),
         'rule_score': float(rule_score),
         'ml_score': float(ml_score),
-        'confidence': float(confidence),
-        'method_details': {
-            'rule_based': rule_result,
-            'ml_based': ml_result
-        },
+        'confidence': confidence,
+        'method_details': _to_native({'rule_based': rule_result, 'ml_based': ml_result}),
         'weights': {
-            'rule_weight': rule_weight,
-            'ml_weight': ml_weight
+            'rule_weight': float(rule_weight),
+            'ml_weight': float(ml_weight)
         }
     }
 

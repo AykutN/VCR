@@ -129,8 +129,8 @@ def detect_with_ml(audio_path, models_dir='models'):
     # Combined score (average)
     combined_score = (lr_score + svm_score) / 2.0
     
-    # Decision (threshold = 0.5)
-    is_fake = combined_score >= 0.5
+    # Decision (threshold = 0.5) - ensure native Python bool to avoid numpy.bool_ in JSON
+    is_fake = bool(combined_score >= 0.5)
     
     # Confidence (distance from 0.5)
     confidence = abs(combined_score - 0.5) * 2
