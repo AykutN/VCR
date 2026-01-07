@@ -12,10 +12,11 @@ This project is designed for analyzing and recognizing cloned (deepfake) and rea
 ├── train_ml_models.py      # ML model training script (Logistic Regression & SVM)
 ├── ml_detector.py          # ML-based detection module
 ├── hybrid_detector.py      # Hybrid detection (rule-based + ML)
+├── export_predictions.py  # Export predictions in CSV format for competition
 ├── clone_real_data.py      # Script to prepare/clone real data for experiments
 ├── record_sentences.py     # Script to record sentences for dataset
-├── analyze_scores.py        # Score distribution analysis
-├── optimize_simple.py       # Parameter optimization script
+├── analyze_scores.py       # Score distribution analysis
+├── optimize_simple.py      # Parameter optimization script
 ├── requirements.txt        # Python dependencies
 ├── templates/               # HTML templates for web interface
 │   └── index.html
@@ -175,7 +176,7 @@ Core idea:
 
 - MFCC (Mel-Frequency Cepstral Coefficients): 13 coefficients representing perceptual spectral shape.
 - Delta and Delta-Delta: first and second derivatives of MFCCs to capture dynamics.
-- Fourier / spectral features: spectral centroid, spectral rolloff, zero-crossing rate, spectral bandwidth.
+- Fourier / spectral features: spectral centroid, spectral rolloff, zero-crossing rate, spectral bandwidth, RMS energy, spectral flatness.
 - Statistical summaries: mean, std, skewness, kurtosis computed per feature.
 - Distance metric: Euclidean distance between feature vectors.
 - Threshold: decision cutoff applied to the combined score.
@@ -201,7 +202,12 @@ Core idea:
 - Hybrid weights: (distance, threshold, statistical) default `(0.3, 0.4, 0.3)`.
 - Distance scale: default `10.0` (normalization factor).
 - MFCC parameters: `n_mfcc=13`, `hop_length=512`, `n_fft=2048`.
-- Features used: MFCC (13), Delta, Delta-Delta, spectral centroid, rolloff, zero-crossing rate, spectral bandwidth; each summarized by mean/std/skew/kurtosis (~200+ features total).
+- Features used: 
+  - MFCC (13 coefficients), Delta, Delta-Delta
+  - Spectral features: spectral centroid, spectral rolloff, zero-crossing rate (ZCR), spectral bandwidth
+  - Energy features: RMS energy
+  - Spectral shape: spectral flatness
+  - Each feature summarized by mean/std/skewness/kurtosis (~200+ features total)
 
 ### Usage Examples
 
@@ -226,7 +232,44 @@ python optimize_simple.py
 python quick_optimize.py
 ```
 
+Export predictions for competition (CSV format):
+```bash
+python export_predictions.py test_directory/ --output predictions.csv --threshold 0.34
+```
+
+### Competition Format
+
+For competition submissions, use the `export_predictions.py` script to generate predictions in the required CSV format:
+
+```bash
+python export_predictions.py test_directory/ --output predictions.csv --threshold 0.34
+```
+
+The output format is:
+```csv
+filename,prediction,confidence
+file_001.wav,0,0.95
+file_002.wav,1,0.82
+```
+
+Where:
+- `prediction`: 0 = Real, 1 = Fake
+- `confidence`: 0.0–1.0 confidence score
+
+### Evaluation Metrics
+
+The system provides comprehensive evaluation metrics:
+- **Accuracy**: Overall classification accuracy
+- **Precision**: Proportion of predicted fakes that are actually fake
+- **Recall (Fake Recall)**: Proportion of actual fakes correctly identified
+- **F1-Score**: Harmonic mean of precision and recall
+- **False Positive Rate**: Proportion of real samples incorrectly classified as fake
+- **Confusion Matrix**: Detailed breakdown of predictions
+
+These metrics are automatically computed and displayed when running `batch_test.py`.
+
 ### Notes / Next Steps
 
 - The threshold can be tuned (e.g., 0.36–0.37) if you want higher real accuracy at the expense of cloned recall.
-- Consider adding further features or improving feature normalization for better robustness.
+- All required features from the project specification are now included (MFCC, Delta, Delta-Delta, Spectral features, RMS Energy, Spectral Flatness).
+- The system is ready for competition submission with CSV export functionality.

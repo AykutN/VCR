@@ -13,6 +13,7 @@ import librosa
 from scipy import stats
 from scipy.spatial.distance import euclidean
 from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import confusion_matrix, precision_score, recall_score, f1_score, accuracy_score
 import warnings
 warnings.filterwarnings('ignore')
 
@@ -54,13 +55,21 @@ def extract_fourier_features(audio, sr=22050, hop_length=512, n_fft=2048):
     mel_spectrogram = librosa.feature.melspectrogram(
         y=audio, sr=sr, hop_length=hop_length, n_fft=n_fft
     )
+    rms_energy = librosa.feature.rms(
+        y=audio, hop_length=hop_length, frame_length=n_fft
+    )
+    spectral_flatness = librosa.feature.spectral_flatness(
+        y=audio, hop_length=hop_length, n_fft=n_fft
+    )
     
     return {
         'spectral_centroid': spectral_centroid,
         'spectral_rolloff': spectral_rolloff,
         'zero_crossing_rate': zero_crossing_rate,
         'spectral_bandwidth': spectral_bandwidth,
-        'mel_spectrogram': mel_spectrogram
+        'mel_spectrogram': mel_spectrogram,
+        'rms_energy': rms_energy,
+        'spectral_flatness': spectral_flatness
     }
 
 def compute_statistical_features(feature_matrix):
@@ -119,7 +128,7 @@ def flatten_statistical_features(features):
             feature_list.append(features['delta_delta_stats'][stat_name])
     
     fourier_keys = ['spectral_centroid', 'spectral_rolloff', 'zero_crossing_rate', 
-                    'spectral_bandwidth']
+                    'spectral_bandwidth', 'rms_energy', 'spectral_flatness']
     for key in fourier_keys:
         stat_key = f'{key}_stats'
         if stat_key in features:
@@ -527,6 +536,73 @@ def batch_test_all_files(real_dir='data/real', cloned_dir='data/cloned', thresho
     
     return results
 
+def compute_detailed_metrics(batch_results):
+    """
+    Compute detailed metrics including confusion matrix, precision, recall, F1-score, and FPR.
+    
+    Parameters:
+    -----------
+    batch_results : dict
+        Results from batch_test_all_files()
+    
+    Returns:
+    --------
+    metrics : dict
+        Dictionary containing all computed metrics
+    """
+    # Prepare true labels and predictions
+    y_true = []
+    y_pred = []
+    
+    # Real audio: label = 0 (Real), prediction = 0 if not fake, 1 if fake
+    if 'real' in batch_results and batch_results['real']:
+        for result in batch_results['real']:
+            y_true.append(0)  # Real = 0
+            y_pred.append(1 if result['is_fake'] else 0)
+    
+    # Cloned audio: label = 1 (Fake), prediction = 1 if fake, 0 if not fake
+    if 'cloned' in batch_results and batch_results['cloned']:
+        for result in batch_results['cloned']:
+            y_true.append(1)  # Fake = 1
+            y_pred.append(1 if result['is_fake'] else 0)
+    
+    if len(y_true) == 0:
+        return None
+    
+    y_true = np.array(y_true)
+    y_pred = np.array(y_pred)
+    
+    # Compute confusion matrix
+    cm = confusion_matrix(y_true, y_pred)
+    # Format: [[TN, FP], [FN, TP]]
+    tn, fp, fn, tp = cm.ravel() if cm.size == 4 else (0, 0, 0, 0)
+    
+    # Compute metrics
+    accuracy = accuracy_score(y_true, y_pred)
+    precision = precision_score(y_true, y_pred, zero_division=0)
+    recall = recall_score(y_true, y_pred, zero_division=0)  # This is Fake Recall
+    f1 = f1_score(y_true, y_pred, zero_division=0)
+    
+    # False Positive Rate = FP / (FP + TN)
+    fpr = fp / (fp + tn) if (fp + tn) > 0 else 0.0
+    
+    # Fake Recall = TP / (TP + FN) (same as recall for class 1)
+    fake_recall = tp / (tp + fn) if (tp + fn) > 0 else 0.0
+    
+    return {
+        'confusion_matrix': cm.tolist(),
+        'tn': int(tn),
+        'fp': int(fp),
+        'fn': int(fn),
+        'tp': int(tp),
+        'accuracy': float(accuracy),
+        'precision': float(precision),
+        'recall': float(recall),
+        'f1_score': float(f1),
+        'false_positive_rate': float(fpr),
+        'fake_recall': float(fake_recall)
+    }
+
 def print_summary(batch_results):
     """Print summary statistics from batch test results."""
     print("\n" + "="*70)
@@ -559,6 +635,25 @@ def print_summary(batch_results):
                       batch_results['summary']['cloned']['count'])
         overall_accuracy = total_correct / total_files if total_files > 0 else 0
         print(f"\nOVERALL ACCURACY: {overall_accuracy:.2%} ({total_correct}/{total_files})")
+    
+    # Detailed metrics
+    metrics = compute_detailed_metrics(batch_results)
+    if metrics:
+        print("\n" + "="*70)
+        print("DETAILED METRICS")
+        print("="*70)
+        print(f"\nConfusion Matrix:")
+        print(f"                Predicted")
+        print(f"              Real  Fake")
+        print(f"Actual Real    {metrics['tn']:4d}  {metrics['fp']:4d}")
+        print(f"       Fake    {metrics['fn']:4d}  {metrics['tp']:4d}")
+        print(f"\nMetrics:")
+        print(f"  Accuracy:           {metrics['accuracy']:.4f} ({metrics['accuracy']:.2%})")
+        print(f"  Precision:          {metrics['precision']:.4f} ({metrics['precision']:.2%})")
+        print(f"  Recall (Fake):      {metrics['recall']:.4f} ({metrics['recall']:.2%})")
+        print(f"  F1-Score:          {metrics['f1_score']:.4f} ({metrics['f1_score']:.2%})")
+        print(f"  False Positive Rate: {metrics['false_positive_rate']:.4f} ({metrics['false_positive_rate']:.2%})")
+        print(f"  Fake Recall:       {metrics['fake_recall']:.4f} ({metrics['fake_recall']:.2%})")
 
     print("\n" + "="*70)
 
